@@ -62,12 +62,6 @@ isLastBlankTM(false)
   current_state = new State();
 }
 
-FSTProcessor::~FSTProcessor()
-{
-  delete current_state;
-  delete initial_state;
-}
-
 wchar_t
 FSTProcessor::readEscaped(FILE *input)
 {
