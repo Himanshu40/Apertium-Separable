@@ -68,12 +68,6 @@ FSTProcessor::~FSTProcessor()
   delete initial_state;
 }
 
-void
-FSTProcessor::streamError()
-{
-  throw Exception("Error: Malformed input stream.");
-}
-
 wchar_t
 FSTProcessor::readEscaped(FILE *input)
 {
