@@ -570,47 +570,6 @@ FSTProcessor::compoundAnalysis(wstring input_word, bool uppercase, bool firstupp
   return result;
 }
 
-
-
-void
-FSTProcessor::initDecompositionSymbols()
-{
-  if((compoundOnlyLSymbol=alphabet(L"<:co:only-L>")) == 0
-     && (compoundOnlyLSymbol=alphabet(L"<:compound:only-L>")) == 0
-     && (compoundOnlyLSymbol=alphabet(L"<@co:only-L>")) == 0
-     && (compoundOnlyLSymbol=alphabet(L"<@compound:only-L>")) == 0
-     && (compoundOnlyLSymbol=alphabet(L"<compound-only-L>")) == 0)
-  {
-    wcerr << L"Warning: Decomposition symbol <:compound:only-L> not found" << endl;
-  }
-  else if(!showControlSymbols)
-  {
-    alphabet.setSymbol(compoundOnlyLSymbol, L"");
-  }
-
-  if((compoundRSymbol=alphabet(L"<:co:R>")) == 0
-     && (compoundRSymbol=alphabet(L"<:compound:R>")) == 0
-     && (compoundRSymbol=alphabet(L"<@co:R>")) == 0
-     && (compoundRSymbol=alphabet(L"<@compound:R>")) == 0
-     && (compoundRSymbol=alphabet(L"<compound-R>")) == 0)
-  {
-    wcerr << L"Warning: Decomposition symbol <:compound:R> not found" << endl;
-  }
-  else if(!showControlSymbols)
-  {
-    alphabet.setSymbol(compoundRSymbol, L"");
-  }
-}
-
-
-void
-FSTProcessor::initDecomposition()
-{
-  do_decomposition = true;
-  initAnalysis();
-  initDecompositionSymbols();
-}
-
 void
 FSTProcessor::analysis(FILE *input, FILE *output)
 {
@@ -2120,27 +2079,6 @@ FSTProcessor::bilingual_wrapper_null_flush(FILE *input, FILE *output)
   }
 }
 
-wstring
-FSTProcessor::compose(wstring const &lexforms, wstring const &queue) const
-{
-  wstring result = L"";
-
-  for(unsigned int i = 1; i< lexforms.size(); i++)
-  {
-    if(lexforms[i] == L'\\')
-    {
-      result += L'\\';
-      i++;
-    }
-    else if(lexforms[i] == L'/')
-    {
-      result.append(queue);
-    }
-    result += lexforms[i];
-  }
-
-  return L"/" + result + queue;
-}
 
 void
 FSTProcessor::bilingual(FILE *input, FILE *output)
@@ -2856,18 +2794,4 @@ FSTProcessor::SAO(FILE *input, FILE *output)
 
   // print remaining blanks
   flushBlanks(output);
-}
-
-wstring
-FSTProcessor::removeTags(wstring const &str)
-{
-  for(unsigned int i = 0; i < str.size(); i++)
-  {
-    if(str[i] == L'<' && i >=1 && str[i-1] != L'\\')
-    {
-      return str.substr(0, i);
-    }
-  }
-
-  return str;
 }
