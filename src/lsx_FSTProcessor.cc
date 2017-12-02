@@ -100,6 +100,19 @@ FSTProcessor::load(FILE *input)
 }
 
 void
+FSTProcessor::calcInitial()
+{
+  for(map<wstring, TransExe, Ltstr>::iterator it = transducers.begin(),
+                                             limit = transducers.end();
+      it != limit; it++)
+  {
+    root.addTransition(0, 0, it->second.getInitial());
+  }
+
+  initial_state->init(&root);
+}
+
+void
 FSTProcessor::initGeneration()
 {
   for(map<wstring, TransExe, Ltstr>::iterator it = transducers.begin(),
