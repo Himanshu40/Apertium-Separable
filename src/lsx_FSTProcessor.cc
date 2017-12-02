@@ -348,6 +348,18 @@ FSTProcessor::load(FILE *input)
 
 }
 
+void
+FSTProcessor::initGeneration()
+{
+  for(map<wstring, TransExe, Ltstr>::iterator it = transducers.begin(),
+                                             limit = transducers.end();
+      it != limit; it++)
+  {
+    all_finals.insert(it->second.getFinals().begin(),
+                      it->second.getFinals().end());
+  }
+}
+
 wstring
 FSTProcessor::compoundAnalysis(wstring input_word, bool uppercase, bool firstupper)
 {
