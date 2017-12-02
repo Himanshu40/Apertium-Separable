@@ -500,65 +500,6 @@ FSTProcessor::readBilingual(FILE *input, FILE *output)
 }
 
 void
-FSTProcessor::printWordBilingual(wstring const &sf, wstring const &lf, FILE *output)
-{
-  fputwc_unlocked(L'^', output);
-  fputws_unlocked(sf.c_str(), output);
-  fputws_unlocked(lf.c_str(), output);
-  fputwc_unlocked(L'$', output);
-}
-
-void
-FSTProcessor::printUnknownWord(wstring const &sf, FILE *output)
-{
-  fputwc_unlocked(L'^', output);
-  writeEscaped(sf, output);
-  fputwc_unlocked(L'/', output);
-  fputwc_unlocked(L'*', output);
-  writeEscaped(sf, output);
-  fputwc_unlocked(L'$', output);
-}
-
-unsigned int
-FSTProcessor::lastBlank(wstring const &str)
-{
-  for(int i = static_cast<int>(str.size())-1; i >= 0; i--)
-  {
-    if(alphabetic_chars.find(str[i]) == alphabetic_chars.end())
-    {
-      return static_cast<unsigned int>(i);
-    }
-  }
-
-  return 0;
-}
-
-void
-FSTProcessor::printSpace(wchar_t const val, FILE *output)
-{
-  if(blankqueue.size() > 0)
-  {
-    flushBlanks(output);
-  }
-  else
-  {
-    fputwc_unlocked(val, output);
-  }
-}
-
-bool
-FSTProcessor::isEscaped(wchar_t const c) const
-{
-  return escaped_chars.find(c) != escaped_chars.end();
-}
-
-bool
-FSTProcessor::isAlphabetic(wchar_t const c) const
-{
-  return alphabetic_chars.find(c) != alphabetic_chars.end();
-}
-
-void
 FSTProcessor::load(FILE *input)
 {
   // letters
@@ -588,57 +529,6 @@ FSTProcessor::load(FILE *input)
   }
 
 }
-
-void
-FSTProcessor::initAnalysis()
-{
-  calcInitial();
-  classifyFinals();
-  all_finals = standard;
-  all_finals.insert(inconditional.begin(), inconditional.end());
-  all_finals.insert(postblank.begin(), postblank.end());
-  all_finals.insert(preblank.begin(), preblank.end());
-}
-
-void
-FSTProcessor::initTMAnalysis()
-{
-  calcInitial();
-
-  for(map<wstring, TransExe, Ltstr>::iterator it = transducers.begin(),
-                                             limit = transducers.end();
-      it != limit; it++)
-  {
-    all_finals.insert(it->second.getFinals().begin(),
-                      it->second.getFinals().end());
-  }
-}
-
-void
-FSTProcessor::initGeneration()
-{
-  calcInitial();
-  for(map<wstring, TransExe, Ltstr>::iterator it = transducers.begin(),
-                                             limit = transducers.end();
-      it != limit; it++)
-  {
-    all_finals.insert(it->second.getFinals().begin(),
-                      it->second.getFinals().end());
-  }
-}
-
-void
-FSTProcessor::initPostgeneration()
-{
-  initGeneration();
-}
-
-void
-FSTProcessor::initBiltrans()
-{
-  initGeneration();
-}
-
 
 wstring
 FSTProcessor::compoundAnalysis(wstring input_word, bool uppercase, bool firstupper)
