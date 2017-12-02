@@ -116,6 +116,11 @@ private:
    * Input buffer
    */
   Buffer<int> input_buffer;
+  
+  /**
+   * Begin of the transducer
+   */
+  Node root;
 
   /**
    * true if the position of input stream is out of a word
@@ -196,6 +201,11 @@ private:
    * @param output stream to write blanks
    */
   void flushBlanks(FILE *output);
+  
+    /**
+    * Calculate the initial state of parsing
+    */
+  void calcInitial();
 
   bool isLastBlankTM;
 public:
