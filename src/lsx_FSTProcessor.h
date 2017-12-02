@@ -266,18 +266,7 @@ private:
   /**
    * Calculate the initial state of parsing
    */
-  void calcInitial();
-
-  /**
-   * Calculate all the results of the word being parsed
-   */
-  void classifyFinals();
-
-  /**
-   * Write a string to an output stream,
-   * @param str the string to write, escaping characters
-   * @param output the stream to write in
-   */
+  
   void writeEscaped(wstring const &str, FILE *output);
 
 
