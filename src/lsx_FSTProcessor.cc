@@ -98,6 +98,48 @@ FSTProcessor::readFullBlock(FILE *input, wchar_t const delim1, wchar_t const del
 }
 
 int
+FSTProcessor::readPostgeneration(FILE *input)
+{
+  if(!input_buffer.isEmpty())
+  {
+    return input_buffer.next();
+  }
+
+  wchar_t val = static_cast<wchar_t>(fgetwc_unlocked(input));
+  int altval = 0;
+  if(feof(input))
+  {
+    return 0;
+  }
+
+  switch(val)
+  {
+    case L'<':
+      altval = static_cast<int>(alphabet(readFullBlock(input, L'<', L'>')));
+      input_buffer.add(altval);
+      return altval;
+
+    case L'[':
+      blankqueue.push(readFullBlock(input, L'[', L']'));
+      input_buffer.add(static_cast<int>(L' '));
+      return static_cast<int>(L' ');
+
+    case L'\\':
+      val = static_cast<wchar_t>(fgetwc_unlocked(input));
+      if(escaped_chars.find(val) == escaped_chars.end())
+      {
+        streamError();
+      }
+      input_buffer.add(static_cast<int>(val));
+      return val;
+
+    default:
+      input_buffer.add(val);
+      return val;
+  }
+}
+
+int
 FSTProcessor::readGeneration(FILE *input, FILE *output)
 {
   wint_t val = fgetwc_unlocked(input);
