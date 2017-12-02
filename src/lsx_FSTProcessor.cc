@@ -68,24 +68,6 @@ FSTProcessor::~FSTProcessor()
   delete initial_state;
 }
 
-wchar_t
-FSTProcessor::readEscaped(FILE *input)
-{
-  if(feof(input))
-  {
-    streamError();
-  }
-
-  wchar_t val = static_cast<wchar_t>(fgetwc_unlocked(input));
-
-  if(feof(input) || escaped_chars.find(val) == escaped_chars.end())
-  {
-    streamError();
-  }
-
-  return val;
-}
-
 wstring
 FSTProcessor::readFullBlock(FILE *input, wchar_t const delim1, wchar_t const delim2)
 {
@@ -113,53 +95,6 @@ FSTProcessor::readFullBlock(FILE *input, wchar_t const delim1, wchar_t const del
   }
 
   return result;
-}
-
-int
-FSTProcessor::readAnalysis(FILE *input)
-{
-  if(!input_buffer.isEmpty())
-  {
-    return input_buffer.next();
-  }
-
-  wchar_t val = static_cast<wchar_t>(fgetwc_unlocked(input));
-  int altval = 0;
-  if(feof(input))
-  {
-    return 0;
-  }
-
-  if(escaped_chars.find(val) != escaped_chars.end())
-  {
-    switch(val)
-    {
-      case L'<':
-        altval = static_cast<int>(alphabet(readFullBlock(input, L'<', L'>')));
-	input_buffer.add(altval);
-        return altval;
-
-      case L'[':
-        blankqueue.push(readFullBlock(input, L'[', L']'));
-        input_buffer.add(static_cast<int>(L' '));
-        return static_cast<int>(L' ');
-
-      case L'\\':
-        val = static_cast<wchar_t>(fgetwc_unlocked(input));
-        if(escaped_chars.find(val) == escaped_chars.end())
-        {
-          streamError();
-        }
-        input_buffer.add(static_cast<int>(val));
-        return val;
-
-      default:
-        streamError();
-    }
-  }
-
-  input_buffer.add(val);
-  return val;
 }
 
 int
@@ -201,15 +136,7 @@ FSTProcessor::readTMAnalysis(FILE *input)
         }
         input_buffer.add(static_cast<int>(val));
         return val;
-      case L'0':
-      case L'1':
-      case L'2':
-      case L'3':
-      case L'4':
-      case L'5':
-      case L'6':
-      case L'7':
-      case L'8':
+
       case L'9':
         {
           wstring ws = L"";
