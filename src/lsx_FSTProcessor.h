@@ -32,20 +32,6 @@
 #include <string>
 
 using namespace std;
-
-/**
- * Kind of output of the generator module
- */
-enum GenerationMode
-{
-  gm_clean,      // clear all
-  gm_unknown,    // display unknown words, clear transfer and generation tags
-  gm_all,        // display all
-  gm_tagged,     // tagged generation
-  gm_tagged_nm,  // clean tagged generation
-  gm_carefulcase // try lowercase iff no uppercase
-};
-
 /**
  * Class that implements the FST-based modules of the system
  */
@@ -58,14 +44,9 @@ private:
   map<wstring, TransExe, Ltstr> transducers;
 
   /**
-   * Current state of lexical analysis
-   */
-  State *current_state;
-
-  /**
    * Initial state of every token
    */
-  State *initial_state;
+  State initial_state;
 
   /**
    * Merge of 'inconditional', 'standard', 'postblank' and 'preblank' sets
@@ -101,60 +82,6 @@ private:
    * true if the position of input stream is out of a word
    */
   bool outOfWord;
-
-  /**
-   * true if we're automatically removing surface forms.
-   */
-  bool biltransSurfaceForms;
-
-
-  /**
-   * if true, makes always difference between uppercase and lowercase
-   * characters
-   */
-  bool caseSensitive;
-
-  /**
-   * if true, uses the dictionary case, discarding surface case
-   * information
-   */
-  bool dictionaryCase;
-
-  /**
-   * if true, flush the output when the null character is found
-   */
-  bool nullFlush;
-
-  /**
-   * nullFlush property for the skipUntil function
-   */
-  bool nullFlushGeneration;
-
-  /**
-   * try analysing unknown words as compounds
-   */
-  bool do_decomposition;
-
-  /**
-   * Symbol of CompoundOnlyL
-   */
-  int compoundOnlyLSymbol;
-
-  /**
-   * Symbol of CompoundR
-   */
-  int compoundRSymbol;
-
-  /**
-   * Show or not the controls symbols (as compoundRSymbol)
-   */
-   bool showControlSymbols;
-
-  /**
-   * Max compound elements
-   * Hard coded for now, but there might come a switch one day
-   */
-  int compound_max_elements;
 
   /**
    * Prints an error of input stream and exits
@@ -194,10 +121,9 @@ private:
    */
   void calcInitial();
 
-  bool isLastBlankTM;
 public:
   FSTProcessor();
-  ~FSTProcessor();
+
 
   void initGeneration();
   void load(FILE *input);
