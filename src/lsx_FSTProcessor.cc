@@ -47,19 +47,8 @@ isLastBlankTM(false)
   escaped_chars.insert(L'>');
   escaped_chars.insert(L'+');
 
-  caseSensitive = false;
-  dictionaryCase = false;
-  do_decomposition = false;
-  nullFlush = false;
-  nullFlushGeneration = false;
-  showControlSymbols = false;
-  biltransSurfaceForms = false;
-  compoundOnlyLSymbol = 0;
-  compoundRSymbol = 0;
-  compound_max_elements = 4;
-
-  initial_state = new State();
-  current_state = new State();
+  initial_state = {};
+  current_state = {};
 }
 
 FSTProcessor::~FSTProcessor()
