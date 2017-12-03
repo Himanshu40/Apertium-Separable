@@ -224,9 +224,6 @@ public:
   FSTProcessor();
   ~FSTProcessor();
 
-  void initAnalysis();
-  void initTMAnalysis();
-  void initSAO(){initAnalysis();};
   void initGeneration();
   void load(FILE *input);
 
