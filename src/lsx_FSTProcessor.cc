@@ -30,8 +30,7 @@ using namespace std;
 
 
 FSTProcessor::FSTProcessor() :
-outOfWord(false),
-isLastBlankTM(false)
+outOfWord(false)
 {
   // escaped_chars chars
   escaped_chars.insert(L'[');
@@ -47,14 +46,6 @@ isLastBlankTM(false)
   escaped_chars.insert(L'>');
   escaped_chars.insert(L'+');
 
-  initial_state = {};
-  current_state = {};
-}
-
-FSTProcessor::~FSTProcessor()
-{
-  delete current_state;
-  delete initial_state;
 }
 
 void
@@ -127,7 +118,7 @@ FSTProcessor::calcInitial()
     root.addTransition(0, 0, it->second.getInitial());
   }
 
-  initial_state->init(&root);
+  initial_state.init(&root);
 }
 
 void
@@ -192,7 +183,7 @@ FSTProcessor::lsx(FILE *input, FILE *output)
   bool finalFound = false;
   bool plus_thing = false;
 
-  alive_states.push_back(*initial_state);
+  alive_states.push_back(initial_state);
 
   while(!feof(input))
   {
@@ -217,7 +208,7 @@ FSTProcessor::lsx(FILE *input, FILE *output)
           blankqueue.pop();
         }
 
-        alive_states.push_back(*initial_state);
+        alive_states.push_back(initial_state);
 
         alt_in = L"";
         for(int i=0; i < (int) in.size(); i++) // FIXME indexing
@@ -280,7 +271,7 @@ FSTProcessor::lsx(FILE *input, FILE *output)
           new_states.clear();
           out = s.filterFinals(all_finals, alphabet, escaped_chars);
 
-          new_states.push_back(*initial_state);
+          new_states.push_back(initial_state);
 
           alt_out = L"";
           for (int i=0; i < (int) out.size(); i++)
@@ -425,3 +416,4 @@ FSTProcessor::lsx(FILE *input, FILE *output)
 
   flushBlanks(output);
 }
+
