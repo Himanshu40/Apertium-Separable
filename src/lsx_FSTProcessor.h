@@ -68,26 +68,6 @@ private:
   State *initial_state;
 
   /**
-   * Set of final states of inconditional sections in the dictionaries
-   */
-  set<Node *> inconditional;
-
-  /**
-   * Set of final states of standard sections in the dictionaries
-   */
-  set<Node *> standard;
-
-  /**
-   * Set of final states of postblank sections in the dictionaries
-   */
-  set<Node *> postblank;
-
-  /**
-   * Set of final states of preblank sections in the dictionaries
-   */
-  set<Node *> preblank;
-
-  /**
    * Merge of 'inconditional', 'standard', 'postblank' and 'preblank' sets
    */
   set<Node *> all_finals;
@@ -111,11 +91,6 @@ private:
    * Alphabet
    */
   Alphabet alphabet;
-
-  /**
-   * Input buffer
-   */
-  Buffer<int> input_buffer;
 
   /**
    * Begin of the transducer
